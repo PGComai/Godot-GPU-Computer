@@ -26,7 +26,11 @@ func _load_shader() -> void:
 	var shader_spirv: RDShaderSPIRV = shader_file.get_spirv()
 	shader = rd.shader_create_from_spirv(shader_spirv)
 
-func _add_buffer(_set: int, binding: int, data: PackedByteArray, usage := RenderingDevice.STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT) -> void:
+func _add_buffer(_set: int,
+			binding: int,
+			data: PackedByteArray,
+			usage := RenderingDevice.STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT,
+		) -> void:
 	var set_and_binding := Vector2i(_set, binding)
 	shader_buffers[set_and_binding] = rd.storage_buffer_create(data.size(), data, usage)
 
@@ -35,7 +39,7 @@ func _add_uniform(_uniform_type: RenderingDevice.UniformType, _set: int, _bindin
 	new_uniform.uniform_type = _uniform_type
 	new_uniform.binding = _binding
 	new_uniform.add_id(buffer)
-	if !shader_uniforms.has(_set):
+	if not shader_uniforms.has(_set):
 		shader_uniforms[_set] = [new_uniform]
 	else:
 		shader_uniforms[set].append(new_uniform)
@@ -47,7 +51,10 @@ func _add_uniform_set(_set: int) -> void:
 func _make_pipeline(workgroup_size: Vector3i, new_pipeline: bool = false) -> void:
 	if new_pipeline:
 		for set_and_binding in shader_buffers.keys():
-			_add_uniform(RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, set_and_binding.x, set_and_binding.y, shader_buffers[set_and_binding])
+			_add_uniform(RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER,
+					set_and_binding.x,
+					set_and_binding.y,
+					shader_buffers[set_and_binding],)
 		for _set in shader_uniforms.keys():
 			_add_uniform_set(_set)
 		pipeline = rd.compute_pipeline_create(shader)
@@ -74,7 +81,12 @@ func output(_set: int, binding: int, offset_bytes: int = 0, size_bytes: int = 0)
 	var requested_output = rd.buffer_get_data(requested_buffer, offset_bytes, size_bytes)
 	return requested_output
 
-func _update_buffer(new_byte_array: PackedByteArray, _set: int, binding: int, offset: int = 0, post_barrier: RenderingDevice.BarrierMask = RenderingDevice.BARRIER_MASK_ALL_BARRIERS) -> void:
+func _update_buffer(new_byte_array: PackedByteArray,
+			_set: int,
+			binding: int,
+			offset: int = 0,
+			post_barrier: RenderingDevice.BarrierMask = RenderingDevice.BARRIER_MASK_ALL_BARRIERS,
+		) -> void:
 	var set_and_binding := Vector2i(_set, binding)
 	var requested_buffer: RID = shader_buffers[set_and_binding]
 	rd.buffer_update(requested_buffer, offset, new_byte_array.size(), new_byte_array, post_barrier)
