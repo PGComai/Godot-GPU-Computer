@@ -1,6 +1,8 @@
 # Godot-GPU-Computer
 A helper class for using compute shaders in Godot 4.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y0NJZLS)
+
 ## Example
 ```GDScript
 ## create new GPUComputer instance
