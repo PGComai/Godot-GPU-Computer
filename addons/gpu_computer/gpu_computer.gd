@@ -42,7 +42,7 @@ func _add_uniform(_uniform_type: RenderingDevice.UniformType, _set: int, _bindin
 	if not shader_uniforms.has(_set):
 		shader_uniforms[_set] = [new_uniform]
 	else:
-		shader_uniforms[set].append(new_uniform)
+		shader_uniforms[_set].append(new_uniform)
 
 func _add_uniform_set(_set: int) -> void:
 	var new_uniform_set := rd.uniform_set_create(shader_uniforms[_set], shader, _set)
@@ -75,10 +75,12 @@ func _sync() -> void:
 	submitted = false
 	emit_signal("compute_list_synced")
 
-func output(_set: int, binding: int, offset_bytes: int = 0, size_bytes: int = 0) -> PackedByteArray:
+func output(_set: int, binding: int, offset_bytes: int = 0, size_bytes: int = 0, free_RID: bool = false) -> PackedByteArray:
 	var set_and_binding := Vector2i(_set, binding)
 	var requested_buffer: RID = shader_buffers[set_and_binding]
 	var requested_output = rd.buffer_get_data(requested_buffer, offset_bytes, size_bytes)
+	if free_RID:
+		rd.free_rid(requested_buffer)
 	return requested_output
 
 func _update_buffer(new_byte_array: PackedByteArray,
@@ -90,3 +92,7 @@ func _update_buffer(new_byte_array: PackedByteArray,
 	var set_and_binding := Vector2i(_set, binding)
 	var requested_buffer: RID = shader_buffers[set_and_binding]
 	rd.buffer_update(requested_buffer, offset, new_byte_array.size(), new_byte_array, post_barrier)
+
+func _exit_tree():
+	for set_and_binding in shader_buffers.keys():
+		rd.free_rid(shader_buffers[set_and_binding])
