@@ -93,6 +93,11 @@ func _update_buffer(new_byte_array: PackedByteArray,
 	var requested_buffer: RID = shader_buffers[set_and_binding]
 	rd.buffer_update(requested_buffer, offset, new_byte_array.size(), new_byte_array, post_barrier)
 
+func _free_rid(_set: int, binding: int) -> void:
+	var set_and_binding := Vector2i(_set, binding)
+	var requested_buffer: RID = shader_buffers[set_and_binding]
+	rd.free_rid(requested_buffer)
+
 func _exit_tree():
 	for set_and_binding in shader_buffers.keys():
 		rd.free_rid(shader_buffers[set_and_binding])
