@@ -1,6 +1,8 @@
 # Godot-GPU-Computer
 A helper class for using compute shaders in Godot 4.
 
+[More stuff](https://pgcomai.github.io/my-website/)
+
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y0NJZLS)
 
 ## Example
