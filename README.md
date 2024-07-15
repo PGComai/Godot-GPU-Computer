@@ -27,8 +27,13 @@ func _ready():
 	## create uniforms from buffers, make render pipeline, set workgroup size
 	gc._make_pipeline(Vector3i(5, 1, 1), true)
 	
-	## send to GPU and then request return data
+	## send to GPU
 	gc._submit()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	## request return data
 	gc._sync()
 	
 	## get buffer output
@@ -42,5 +47,4 @@ func _ready():
 	gc._make_pipeline(Vector3i(5, 1, 1))
 	
 	gc._submit()
-	gc._sync()
 ```
