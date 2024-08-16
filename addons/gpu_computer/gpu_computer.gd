@@ -87,11 +87,10 @@ func _update_buffer(new_byte_array: PackedByteArray,
 			_set: int,
 			binding: int,
 			offset: int = 0,
-			post_barrier: RenderingDevice.BarrierMask = RenderingDevice.BARRIER_MASK_ALL_BARRIERS,
 		) -> void:
 	var set_and_binding := Vector2i(_set, binding)
 	var requested_buffer: RID = shader_buffers[set_and_binding]
-	rd.buffer_update(requested_buffer, offset, new_byte_array.size(), new_byte_array, post_barrier)
+	rd.buffer_update(requested_buffer, offset, new_byte_array.size(), new_byte_array)
 
 func _free_rid(_set: int, binding: int) -> void:
 	var set_and_binding := Vector2i(_set, binding)
